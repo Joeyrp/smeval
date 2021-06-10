@@ -1,10 +1,14 @@
 
 use std::{io, io::Write};
 
+//use smeval::{interpreter::Interpreter};
+
 fn main() 
 {
     let mut input: String;
     let mut history = String::new();
+   // let interp = Interpreter::new();
+
     loop
     {
         input = String::new();
@@ -17,9 +21,12 @@ fn main()
         // println!("input: {}", input);
         // println!("history: {}", history);
 
+
         if input.trim() == "quit"
         {
             break;
         }
+
+        smeval::evaluate(&input);
     }
 }
