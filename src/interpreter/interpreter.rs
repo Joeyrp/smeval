@@ -5,6 +5,11 @@ pub struct Interpreter
     
 }
 
+pub struct InterpreterError
+{
+   pub msg: String
+}
+
 impl Interpreter
 {
     pub fn new() -> Interpreter
@@ -12,5 +17,10 @@ impl Interpreter
         Interpreter { }
     }
 
-    // TODO: Add interpret method that returns the result
+    pub fn run(&mut self) -> Result<(), InterpreterError>
+    {
+        Err(InterpreterError { msg: String::from("Lexer::run method not yet implemented")})
+
+        // Ok(())
+    }
 }

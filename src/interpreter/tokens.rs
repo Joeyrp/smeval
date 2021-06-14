@@ -1,16 +1,19 @@
 
-
+#[derive(Debug)]
 pub enum TokenType
 {
     NUM,
     PLUS,
     MINUS,
     MULT,
-    DIV
+    DIV,
+    LPAREN,
+    RPAREN
 }
 
+#[derive(Debug)]
 pub struct Token
 {
     pub ttype: TokenType,
-    pub value: i32
+    pub value: f32
 }
