@@ -50,37 +50,37 @@ impl Lexer
             }
             else if self.curr_char == '+'
             {
-                let t = Token { ttype: TokenType::PLUS, value: 0.0 };
+                let t = Token { ttype: TokenType::PLUS, csym: '+', value: 0.0 };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == '-'
             {
-                let t = Token { ttype: TokenType::MINUS, value: 0.0 };
+                let t = Token { ttype: TokenType::MINUS, csym: '-', value: 0.0 };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == '*'
             {
-                let t = Token { ttype: TokenType::MULT, value: 0.0 };
+                let t = Token { ttype: TokenType::MULT, csym: '*', value: 0.0 };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == '/'
             {
-                let t = Token { ttype: TokenType::DIV, value: 0.0 };
+                let t = Token { ttype: TokenType::DIV, csym: '/', value: 0.0 };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == '('
             {
-                let t = Token { ttype: TokenType::LPAREN, value: 0.0 };
+                let t = Token { ttype: TokenType::LPAREN, csym: '(', value: 0.0 };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == ')'
             {
-                let t = Token { ttype: TokenType::RPAREN, value: 0.0 };
+                let t = Token { ttype: TokenType::RPAREN, csym: ')', value: 0.0 };
                 self.token_list.push(t);
                 self.advance();
             }
@@ -139,7 +139,7 @@ impl Lexer
         {
             // Convert to u32, make the Token and return it
             let num: f32 = str::from_utf8(&num).unwrap().parse::<f32>().unwrap();
-            let t = Token { ttype: TokenType::NUM, value: num };
+            let t = Token { ttype: TokenType::NUM, csym: '.', value: num };
             return Ok (t);
         }
 

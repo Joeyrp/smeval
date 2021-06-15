@@ -1,5 +1,5 @@
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum TokenType
 {
     NUM,
@@ -11,9 +11,10 @@ pub enum TokenType
     RPAREN
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Token
 {
     pub ttype: TokenType,
+    pub csym: char,
     pub value: f32
 }
