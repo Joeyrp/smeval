@@ -9,7 +9,7 @@
 
 
 
-use std::{str, result::Result};
+use std::{result::Result};
 use super::tokens::{TokenType, Token};
 use super::nodes::{Node};
 
@@ -61,12 +61,12 @@ impl Parser
     fn factor(&mut self) -> Result<Box<Node>, String>
     {
         
-        println!("Looking for FACTOR");
+        // println!("Looking for FACTOR");
         match self.curr_token.ttype
         {
             TokenType::LPAREN =>
             {
-                println!("Found LPAREN");
+               // println!("Found LPAREN");
                 self.advance();
                 let result = self.expr()?;
 
@@ -75,7 +75,7 @@ impl Parser
                     return Err(format!("Parser::Factor - Expected ')' but found {}", self.curr_token.csym));
                 }
 
-                println!("Found RPAREN");
+               // println!("Found RPAREN");
                 self.advance();
                 return Ok(result);
             }
@@ -90,14 +90,14 @@ impl Parser
             TokenType::PLUS => 
             {
                 
-                println!("Creating PLUS node");
+               // println!("Creating PLUS node");
                 self.advance(); 
                 return Ok(Box::new(Node::Plus(Box::new(Node::Nil)))); 
             }
 
             TokenType::MINUS => 
             {
-                println!("Creating MINUS node");
+               // println!("Creating MINUS node");
                 self.advance(); 
                 return Ok(Box::new(Node::Minus(Box::new(Node::Nil)))); 
             }
@@ -114,7 +114,7 @@ impl Parser
     // A term is a factor multiplied or divided by another factor
     fn term (&mut self) -> Result<Box<Node>, String>
     {
-        println!("Looking for TERM");
+        // println!("Looking for TERM");
 
         // Get the first factor of the term
         let mut result = self.factor()?;
@@ -126,7 +126,7 @@ impl Parser
             {
                 TokenType::MULT =>
                 {
-                    println!("Creating MULTIPLY node");
+                   // println!("Creating MULTIPLY node");
                     self.advance();
                     result = Box::new(Node::Multiply(result, self.factor()?));
                 }
@@ -148,7 +148,7 @@ impl Parser
 
     fn expr(&mut self) -> Result<Box<Node>, String>
     {
-        println!("Looking for EXPR");
+        // println!("Looking for EXPR");
 
         // Get the first term of the expression
         let mut result = self.term()?;
@@ -160,7 +160,7 @@ impl Parser
             {
                 TokenType::PLUS =>
                 {
-                    println!("Creating ADD node");
+                  //  println!("Creating ADD node");
                     self.advance();
                     result = Box::new(Node::Add(result, self.term()?));
                 }
@@ -176,7 +176,5 @@ impl Parser
         }
 
         return Ok(result);
-
-        // Err(String::from("Parser::expr method not implemented yet"))
     }
 }

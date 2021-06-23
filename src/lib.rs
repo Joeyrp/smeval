@@ -8,7 +8,7 @@ pub fn evaluate(input: &str) -> ()
     
     match lexer.run(input)
     {
-        Err(msg) => println!("Lexer Error: {}", msg),
+        Err(msg) => { println!("Lexer Error: {}", msg); return },
         _ => ()
     } 
 
@@ -19,10 +19,19 @@ pub fn evaluate(input: &str) -> ()
 
     match parser.run()
     {
-        Err(msg) => println!("Parser Error: {}", msg),
+        Err(msg) => { println!("Parser Error: {}", msg); return },
         _ => ()
     }
 
     // DEBUG: Print the parsed node tree for verification
-    println!("NODE TREE: \n{:#?}", parser.node_tree);
+   // println!("NODE TREE: \n{:#?}", parser.node_tree);
+
+    let mut interp = Interpreter::new();
+
+    match interp.run(*parser.node_tree)
+    {
+        Err(msg) => { println!("Error: {}", msg); return },
+        _ => println!("{}", interp.result)
+    }
+
 }

@@ -1,5 +1,5 @@
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Node
 {
     Number(f32),
