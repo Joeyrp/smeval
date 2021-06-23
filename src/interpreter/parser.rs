@@ -92,14 +92,16 @@ impl Parser
                 
                // println!("Creating PLUS node");
                 self.advance(); 
-                return Ok(Box::new(Node::Plus(Box::new(Node::Nil)))); 
+                let value = self.factor()?;
+                return Ok(Box::new(Node::Plus(Box::new(*value)))); 
             }
 
             TokenType::MINUS => 
             {
                // println!("Creating MINUS node");
                 self.advance(); 
-                return Ok(Box::new(Node::Minus(Box::new(Node::Nil)))); 
+                let value = self.factor()?;
+                return Ok(Box::new(Node::Minus(Box::new(*value)))); 
             }
 
             _ => { return Err(format!("Syntax Error: '{}'", self.curr_token.csym)); }
