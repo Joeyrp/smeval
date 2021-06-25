@@ -39,6 +39,8 @@ impl Interpreter
             Node::Divide(l, r) => { result = self.visit_div(*l, *r)?; },
             Node::Add(l, r) => { result = self.visit_add(*l, *r)?; },
             Node::Subtract(l, r) => { result = self.visit_sub(*l, *r)?; },
+            Node::Plus(x) => { result = self.visit_plus(*x)?; }
+            Node::Minus(x) => { result = self.visit_minus(*x)?; }
             _ => { return Err ( format!("Interpreter::visit method not yet implemented for this node type: {:#?}", node) ); }
         };
 
@@ -80,5 +82,17 @@ impl Interpreter
         let rresult = self.visit(right)?;
 
         Ok(Node::Number(lresult - rresult))
+    }
+
+    fn visit_plus(&mut self, node: Node) -> Result<Node, String>
+    {
+        let result = self.visit(node)?;
+        Ok(Node::Number(result * 1.0))
+    }
+
+    fn visit_minus(&mut self, node: Node) -> Result<Node, String>
+    {
+        let result = self.visit(node)?;
+        Ok(Node::Number(result * -1.0))
     }
 }

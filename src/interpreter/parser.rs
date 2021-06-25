@@ -72,7 +72,7 @@ impl Parser
 
                 if self.curr_token.ttype != TokenType::RPAREN
                 {
-                    return Err(format!("Parser::Factor - Expected ')' but found {}", self.curr_token.csym));
+                    return Err(format!("Syntax Error: Expected ')' but found {}", self.curr_token.csym));
                 }
 
                // println!("Found RPAREN");
