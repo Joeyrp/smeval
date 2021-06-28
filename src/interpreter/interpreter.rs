@@ -2,7 +2,6 @@
 
 use super::nodes::{Node};
 
-// TODO: Add the parsed tree root as a member
 pub struct Interpreter
 {
     tree_root: Node,
