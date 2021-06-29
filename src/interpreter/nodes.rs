@@ -9,6 +9,7 @@ pub enum Node
     Subtract(Box<Node>, Box<Node>),
     Multiply(Box<Node>, Box<Node>),
     Divide(Box<Node>, Box<Node>),
+    Modulus(Box<Node>, Box<Node>),
     Plus(Box<Node>),
     Minus(Box<Node>),
     Nil

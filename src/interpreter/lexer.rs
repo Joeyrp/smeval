@@ -72,6 +72,12 @@ impl Lexer
                 self.token_list.push(t);
                 self.advance();
             }
+            else if self.curr_char == '%'
+            {
+                let t = Token { ttype: TokenType::MOD, csym: '%', value: Value::VOID };
+                self.token_list.push(t);
+                self.advance();
+            }
             else if self.curr_char == '('
             {
                 let t = Token { ttype: TokenType::LPAREN, csym: '(', value: Value::VOID };
@@ -89,6 +95,9 @@ impl Lexer
                 return Err( format!("Illegal character: {}", self.curr_char) );
             }
         }
+
+        let t = Token { ttype: TokenType::EOF, csym: '\0', value: Value::VOID };
+        self.token_list.push(t);
 
         // Err( "Lexer::run method not yet implemented" )
 

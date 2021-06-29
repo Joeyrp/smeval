@@ -7,8 +7,10 @@ pub enum TokenType
     MINUS,
     MULT,
     DIV,
+    MOD,
     LPAREN,
-    RPAREN
+    RPAREN,
+    EOF
 }
 
 #[derive(Debug, Copy, PartialEq, Clone)]

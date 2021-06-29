@@ -1,6 +1,6 @@
 New Features for 1.0:
-    ☐ TODO: Add data types (integer and float)
-    ☐ TODO: Add the modulo operator (requires integer data type)
+    ✔ TODO: Add data types (integer and float) @done (6/29/2021, 3:26:14 PM)
+    ✔ TODO: Add the modulo operator (requires integer data type) @done (6/29/2021, 3:59:06 PM)
 
 Minor Fixes:
    

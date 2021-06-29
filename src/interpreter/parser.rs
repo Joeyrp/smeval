@@ -2,7 +2,7 @@
 // LOW PRECEDENCE
 // ---------------
 // Expression -  Term [ADD/SUB] Term
-// Term - Factor [MULT/DIV] Factor
+// Term - Factor [MULT/DIV/MOD] Factor
 // Factor - Left Parentheses, Number
 //----------------
 // HIGH PRECEDENCE
@@ -37,6 +37,11 @@ impl Parser
         }
 
         self.node_tree = self.expr()?;
+
+        if self.curr_token.ttype != TokenType::EOF
+        {
+            return Err (format!("Parser stopped before node: {:#?}", self.curr_token));
+        }
 
         Ok(())
       //  Err(String::from("Parser::run method not implemented yet"))
@@ -120,7 +125,7 @@ impl Parser
 
         // Get the first factor of the term
         let mut result = self.factor()?;
-        let mult_div = vec![TokenType::MULT, TokenType::DIV];
+        let mult_div = vec![TokenType::MULT, TokenType::DIV, TokenType::MOD];
 
         while mult_div.contains(&self.curr_token.ttype)
         {        
@@ -137,6 +142,12 @@ impl Parser
                 {
                     self.advance();
                     result = Box::new(Node::Divide(result, self.factor()?));
+                }
+
+                TokenType::MOD =>
+                {
+                    self.advance();
+                    result = Box::new(Node::Modulus(result, self.factor()?));
                 }
     
                 _ => { return Err(format!("Syntax Error: '{}'", self.curr_token.csym)); }

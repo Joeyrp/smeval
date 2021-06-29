@@ -32,11 +32,13 @@ impl Interpreter
     fn visit(&mut self, node: Node) -> Result<Value, String>
     {
         let result;
+        // print!("NODE TYPE: {:#?}", node);
         match node 
         {
             Node::Number(x) => { return Ok (x)},
             Node::Multiply(l, r) => { result = self.visit_mult(*l, *r)?; },
             Node::Divide(l, r) => { result = self.visit_div(*l, *r)?; },
+            Node::Modulus(l, r) => { result = self.visit_mod(*l, *r)?; },
             Node::Add(l, r) => { result = self.visit_add(*l, *r)?; },
             Node::Subtract(l, r) => { result = self.visit_sub(*l, *r)?; },
             Node::Plus(x) => { result = self.visit_plus(*x)?; }
@@ -123,6 +125,35 @@ impl Interpreter
                 }
             },
 
+            _ => { return Err(format!("Invalid type on left value {:#?}", lvalue)); }
+        }
+
+
+       // Ok(Node::Number(lresult / rresult))
+    }
+
+    fn visit_mod(&mut self, left: Node, right: Node) -> Result<Node, String>
+    {
+        let lvalue = self.visit(left)?;
+        let rvalue = self.visit(right)?;
+
+        
+        // Catch a divide by zero error
+        if rvalue.is_zero()
+        {
+            return Err( String::from("Attempt to divide by zero!") );
+        }
+
+        match lvalue
+        {
+            Value::INT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::INT(x % y))),
+                    _ =>  return Err(format!("Invalid type on right value {:#?}", rvalue ))
+                }
+            },
             _ => { return Err(format!("Invalid type on left value {:#?}", lvalue)); }
         }
 
