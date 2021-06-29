@@ -1,6 +1,6 @@
 
 use std::{str, result::Result};
-use super::tokens::{TokenType, Token};
+use super::tokens::{TokenType, Value, Token};
 
 // pub struct LexerError
 // {
@@ -50,37 +50,37 @@ impl Lexer
             }
             else if self.curr_char == '+'
             {
-                let t = Token { ttype: TokenType::PLUS, csym: '+', value: 0.0 };
+                let t = Token { ttype: TokenType::PLUS, csym: '+', value: Value::VOID };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == '-'
             {
-                let t = Token { ttype: TokenType::MINUS, csym: '-', value: 0.0 };
+                let t = Token { ttype: TokenType::MINUS, csym: '-', value: Value::VOID };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == '*'
             {
-                let t = Token { ttype: TokenType::MULT, csym: '*', value: 0.0 };
+                let t = Token { ttype: TokenType::MULT, csym: '*', value: Value::VOID };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == '/'
             {
-                let t = Token { ttype: TokenType::DIV, csym: '/', value: 0.0 };
+                let t = Token { ttype: TokenType::DIV, csym: '/', value: Value::VOID };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == '('
             {
-                let t = Token { ttype: TokenType::LPAREN, csym: '(', value: 0.0 };
+                let t = Token { ttype: TokenType::LPAREN, csym: '(', value: Value::VOID };
                 self.token_list.push(t);
                 self.advance();
             }
             else if self.curr_char == ')'
             {
-                let t = Token { ttype: TokenType::RPAREN, csym: ')', value: 0.0 };
+                let t = Token { ttype: TokenType::RPAREN, csym: ')', value: Value::VOID };
                 self.token_list.push(t);
                 self.advance();
             }
@@ -137,13 +137,24 @@ impl Lexer
         // Don't try to parse the number if it's empty or just a single decimal point
         if num.len() > 0 || (num.len() == 1 && num[0] != '.' as u8)
         {
-            // Convert to u32, make the Token and return it
-            let num: f32 = str::from_utf8(&num).unwrap().parse::<f32>().unwrap();
-            let t = Token { ttype: TokenType::NUM, csym: '.', value: num };
+            // Convert to either INT or FLOAT, make the Token and return it
+            let final_num;
+
+            if num.contains(&('.' as u8)) 
+            {
+               final_num = Value::FLOAT(str::from_utf8(&num).unwrap().parse::<f32>().unwrap());
+            }
+            else
+            {
+                final_num = Value::INT(str::from_utf8(&num).unwrap().parse::<i32>().unwrap());
+            }
+
+            //let num: f32 = str::from_utf8(&num).unwrap().parse::<f32>().unwrap();
+            let t = Token { ttype: TokenType::NUM, csym: '.', value: final_num };
             return Ok (t);
         }
 
      //  Err(LexerError { msg: String::from("Lexer::build_num - No number found")})
-        Err( "LexerError: Number was empty or was probably just a '.'" )
+        Err( "Number was empty or was probably just a '.'" )
     }
 }

@@ -148,6 +148,8 @@ impl Parser
       //  Err(String::from("Parser::term method not implemented yet"))
     }
 
+    // This method looks for an expression
+    // and expression is a term added or subtracted from another term
     fn expr(&mut self) -> Result<Box<Node>, String>
     {
         // println!("Looking for EXPR");

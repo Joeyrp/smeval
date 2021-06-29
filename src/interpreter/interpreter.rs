@@ -1,11 +1,12 @@
 
 
 use super::nodes::{Node};
+use super::tokens::Value;
 
 pub struct Interpreter
 {
     tree_root: Node,
-    pub result: f32
+    pub result: Value
 }
 
 pub struct InterpreterError
@@ -17,7 +18,7 @@ impl Interpreter
 {
     pub fn new() -> Interpreter
     {
-        Interpreter { tree_root: Node::Nil, result: 0.0 }
+        Interpreter { tree_root: Node::Nil, result: Value::VOID }
     }
 
     pub fn run(&mut self, root: Node) -> Result<(), String>
@@ -28,7 +29,7 @@ impl Interpreter
         Ok(())
     }
 
-    fn visit(&mut self, node: Node) -> Result<f32, String>
+    fn visit(&mut self, node: Node) -> Result<Value, String>
     {
         let result;
         match node 
@@ -48,50 +49,178 @@ impl Interpreter
 
     fn visit_mult(&mut self, left: Node, right: Node) -> Result<Node, String>
     {
-        let lresult = self.visit(left)?;
-        let rresult = self.visit(right)?;
+        let lvalue = self.visit(left)?;
+        let rvalue = self.visit(right)?;
 
-        Ok(Node::Number(lresult * rresult))
+        // Need to do type checking so that the math operation can be performed.
+        // Hopefully I can find a better way to do this.
+        // This isn't so bad now but if I wanted to add unsigned values
+        // and/or value of different sizes this would become huge and messy.
+        // I'm thinking about overriding the math traits for the Value type which
+        // I think will allow me to hide this type checking code.
+        // Probably won't do it for this project though because I think I'll stick
+        // with just INT and FLOAT types
+        match lvalue
+        {
+            Value::INT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::INT(x * y))),
+                    Value::FLOAT(y) => return Ok(Node::Number(Value::FLOAT((x as f32) * y))),
+                    _ =>  return Err(format!("Invalid type on right value {:#?}", rvalue ))
+                }
+            },
+
+            Value::FLOAT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::FLOAT(x * (y as f32)))),
+                    Value::FLOAT(y) => return Ok(Node::Number(Value::FLOAT(x * y))),
+                    _ =>  return Err(format!("Invalid type on right value{:#?}", rvalue ))
+                }
+            },
+
+            _ => { return Err(format!("Invalid type on left value {:#?}", lvalue)); }
+        }
+
+
+       // Ok(Node::Number(lresult * rresult))
     }
 
     fn visit_div(&mut self, left: Node, right: Node) -> Result<Node, String>
     {
-        let lresult = self.visit(left)?;
-        let rresult = self.visit(right)?;
+        let lvalue = self.visit(left)?;
+        let rvalue = self.visit(right)?;
 
-        if rresult == 0.0
+        
+        // Catch a divide by zero error
+        if rvalue.is_zero()
         {
             return Err( String::from("Attempt to divide by zero!") );
         }
 
-        Ok(Node::Number(lresult / rresult))
+        match lvalue
+        {
+            Value::INT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::INT(x / y))),
+                    Value::FLOAT(y) => return Ok(Node::Number(Value::FLOAT((x as f32) / y))),
+                    _ =>  return Err(format!("Invalid type on right value {:#?}", rvalue ))
+                }
+            },
+
+            Value::FLOAT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::FLOAT(x / (y as f32)))),
+                    Value::FLOAT(y) => return Ok(Node::Number(Value::FLOAT(x / y))),
+                    _ =>  return Err(format!("Invalid type on right value{:#?}", rvalue ))
+                }
+            },
+
+            _ => { return Err(format!("Invalid type on left value {:#?}", lvalue)); }
+        }
+
+
+       // Ok(Node::Number(lresult / rresult))
     }
 
     fn visit_add(&mut self, left: Node, right: Node) -> Result<Node, String>
     {
-        let lresult = self.visit(left)?;
-        let rresult = self.visit(right)?;
+        let lvalue = self.visit(left)?;
+        let rvalue = self.visit(right)?;
 
-        Ok(Node::Number(lresult + rresult))
+        match lvalue
+        {
+            Value::INT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::INT(x + y))),
+                    Value::FLOAT(y) => return Ok(Node::Number(Value::FLOAT((x as f32) + y))),
+                    _ =>  return Err(format!("Invalid type on right value {:#?}", rvalue ))
+                }
+            },
+
+            Value::FLOAT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::FLOAT(x + (y as f32)))),
+                    Value::FLOAT(y) => return Ok(Node::Number(Value::FLOAT(x + y))),
+                    _ =>  return Err(format!("Invalid type on right value{:#?}", rvalue ))
+                }
+            },
+
+            _ => { return Err(format!("Invalid type on left value {:#?}", lvalue)); }
+        }
+
+        // Ok(Node::Number(lresult + rresult))
     }
 
     fn visit_sub(&mut self, left: Node, right: Node) -> Result<Node, String>
     {
-        let lresult = self.visit(left)?;
-        let rresult = self.visit(right)?;
+        let lvalue = self.visit(left)?;
+        let rvalue = self.visit(right)?;
 
-        Ok(Node::Number(lresult - rresult))
+        match lvalue
+        {
+            Value::INT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::INT(x - y))),
+                    Value::FLOAT(y) => return Ok(Node::Number(Value::FLOAT((x as f32) - y))),
+                    _ =>  return Err(format!("Invalid type on right value {:#?}", rvalue ))
+                }
+            },
+
+            Value::FLOAT(x) =>
+            {
+                match rvalue
+                {
+                    Value::INT(y) => return Ok(Node::Number(Value::FLOAT(x - (y as f32)))),
+                    Value::FLOAT(y) => return Ok(Node::Number(Value::FLOAT(x - y))),
+                    _ =>  return Err(format!("Invalid type on right value{:#?}", rvalue ))
+                }
+            },
+
+            _ => { return Err(format!("Invalid type on left value {:#?}", lvalue)); }
+        }
+
+       // Ok(Node::Number(lresult - rresult))
     }
 
     fn visit_plus(&mut self, node: Node) -> Result<Node, String>
     {
         let result = self.visit(node)?;
-        Ok(Node::Number(result * 1.0))
+
+        match result
+        {
+            Value::INT(x) => Ok (Node::Number(Value::INT(x * 1))),
+            Value::FLOAT(x) => Ok (Node::Number(Value::FLOAT(x * 1.0))),
+            _ => Err (format!("Invalid type {:#?}", result))
+        }
+
+       // Ok(Node::Number(result * 1.0))
     }
 
     fn visit_minus(&mut self, node: Node) -> Result<Node, String>
     {
         let result = self.visit(node)?;
-        Ok(Node::Number(result * -1.0))
+
+        match result
+        {
+            Value::INT(x) => Ok (Node::Number(Value::INT(x * -1))),
+            Value::FLOAT(x) => Ok (Node::Number(Value::FLOAT(x * -1.0))),
+            _ => Err (format!("Invalid type {:#?}", result))
+        }
+       
+        // Ok(Node::Number(result * -1.0))
     }
 }

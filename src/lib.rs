@@ -8,7 +8,7 @@ pub fn evaluate(input: &str) -> ()
     
     match lexer.run(input)
     {
-        Err(msg) => { println!("Lexer Error: {}", msg); return },
+        Err(msg) => { println!("{}", msg); return },
         _ => ()
     } 
 
@@ -19,7 +19,7 @@ pub fn evaluate(input: &str) -> ()
 
     match parser.run()
     {
-        Err(msg) => { println!("Parser Error: {}", msg); return },
+        Err(msg) => { println!("{}", msg); return },
         _ => ()
     }
 
@@ -30,7 +30,7 @@ pub fn evaluate(input: &str) -> ()
 
     match interp.run(*parser.node_tree)
     {
-        Err(msg) => { println!("Error: {}", msg); return },
+        Err(msg) => { println!("{}", msg); return },
         _ => println!("{}", interp.result)
     }
 

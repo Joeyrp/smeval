@@ -1,8 +1,10 @@
 
+use super::tokens::Value;
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum Node
 {
-    Number(f32),
+    Number(Value),
     Add(Box<Node>, Box<Node>),
     Subtract(Box<Node>, Box<Node>),
     Multiply(Box<Node>, Box<Node>),
